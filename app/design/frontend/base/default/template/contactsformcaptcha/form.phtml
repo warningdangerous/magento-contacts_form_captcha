@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * Magento
  *
@@ -23,11 +23,26 @@
  * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
  * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
-?>
+$locale = Mage::app()->getLocale()->getLocale();
+ 
+$email = $_POST['email'];
+$name = $_POST['name'];
+$telephone = $_POST['telephone'];
+$comment = $_POST['comment'];
+ ?>
+
+
 <div id="messages_product_view"><?php echo $this->getMessagesBlock()->getGroupedHtml() ?></div>
 <div class="page-title">
     <h1><?php echo Mage::helper('contacts')->__('Contact Us') ?></h1>
 </div>
+<?php
+$store_name = Mage::app()->getWebsite()->getName();
+echo "<h4><p>$store_name</p></h4>";
+echo $this->getLayout()->createBlock('cms/block')->setBlockId('contact_label')->toHtml(); 
+
+?>
+
 <script type="text/javascript">
 //<![CDATA[
     var RecaptchaOptions = {
@@ -36,36 +51,38 @@
     };
 //]]>
 </script>
-<form action="<?php echo $this->getFormAction(); ?>" id="contactForm" method="post">
-    <div class="fieldset">
+<form action="<?php echo $this->getFormAction(); ?>" name="contactForm" id="contactForm" method="post">
+      <div class="fieldset">
         <h2 class="legend"><?php echo Mage::helper('contacts')->__('Contact Information') ?></h2>
         <ul class="form-list">
             <li class="fields">
                 <div class="field">
                     <label for="name" class="required"><em>*</em><?php echo Mage::helper('contacts')->__('Name') ?></label>
                     <div class="input-box">
-                        <input name="name" id="name" title="<?php echo Mage::helper('contacts')->__('Name') ?>" value="<?php echo $this->htmlEscape($this->helper('contacts')->getUserName()) ?>" class="input-text required-entry" type="text" />
+                        <input name="name" id="name" title="<?php echo Mage::helper('contacts')->__('Name') ?>" value="<?php echo $name ?>" class="input-text required-entry" type="text" />
                     </div>
                 </div>
                 <div class="field">
                     <label for="email" class="required"><em>*</em><?php echo Mage::helper('contacts')->__('Email') ?></label>
                     <div class="input-box">
-                        <input name="email" id="email" title="<?php echo Mage::helper('contacts')->__('Email') ?>" value="<?php echo $this->htmlEscape($this->helper('contacts')->getUserEmail()) ?>" class="input-text required-entry validate-email" type="text" />
+                        <input name="email" id="email" title="<?php echo Mage::helper('contacts')->__('Email') ?>" value="<?php echo $email; ?>" class="input-text required-entry validate-email" type="text" />
                     </div>
                 </div>
             </li>
             <li>
                 <label for="telephone"><?php echo Mage::helper('contacts')->__('Telephone') ?></label>
                 <div class="input-box">
-                    <input name="telephone" id="telephone" title="<?php echo Mage::helper('contacts')->__('Telephone') ?>" value="" class="input-text" type="text" />
+                    <input name="telephone" id="telephone" title="<?php echo Mage::helper('contacts')->__('Telephone') ?>" class="input-text" value="<?php echo $telephone ; ?>" type="text" />
                 </div>
             </li>
             <li class="wide">
                 <label for="comment" class="required"><em>*</em><?php echo Mage::helper('contacts')->__('Comment') ?></label>
                 <div class="input-box">
-                    <textarea name="comment" id="comment" title="<?php echo Mage::helper('contacts')->__('Comment') ?>" class="required-entry input-text" cols="5" rows="3"></textarea>
-                </div>
+
+				<textarea name="comment" id="comment" title="<?php echo Mage::helper('contacts')->__('Comment') ?>" class="required-entry input-text" cols="5" rows="3"> <?php echo $comment ?> </textarea>
+				</div>
             </li>
+
             <li class="wide">
                 <div class="input-box">
                     <?php echo $this->getCaptchaCode(); ?>
@@ -73,8 +90,15 @@
             </li>
         </ul>
     </div>
+	
     <div class="buttons-set">
-        <p class="required"><?php echo Mage::helper('contacts')->__('* Required Fields') ?></p>
+        <p class="required"><?php echo Mage::helper('contacts')->__('* Required Fields') ?>
+	
+	<?php	
+		if ($locale == "el_GR") {echo '<br>Παρακαλώ, ελέγξετε τα απαιτούμενα πεδία </p>'; }
+		if ($locale == "en_US") {echo '<br>Check the Required Fields, please </p>'; }
+	?>
+	
         <input type="text" name="hideit" id="hideit" value="" style="display:none !important;" />
         <button type="submit" title="<?php echo Mage::helper('contacts')->__('Submit') ?>" class="button"><span><span><?php echo Mage::helper('contacts')->__('Submit') ?></span></span></button>
     </div>
