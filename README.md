@@ -15,3 +15,10 @@ This extension uses reCaptcha library (http://www.google.com/recaptcha).
 ## CUSTOM DESIGN
 * If you have a custom design, you will need to update the corresponding "Contacts Form Captcha" file:
     app/design/frontend/base/default/template/contactsformcaptcha/form.phtml
+
+Thanks OlegKoval for this extension
+	
+	i make this to keep data 
+	* at captcha error
+	* at missing / wrong required field (Warningdangerous)
+	
