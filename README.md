@@ -20,5 +20,4 @@ Thanks OlegKoval for this extension
 	
 	i make this to keep data 
 	* at captcha error
-	* at missing / wrong required field (Warningdangerous)
 	
