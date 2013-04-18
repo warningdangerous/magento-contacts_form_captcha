@@ -24,11 +24,15 @@
  * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 $locale = Mage::app()->getLocale()->getLocale();
- 
-$email = $_POST['email'];
-$name = $_POST['name'];
-$telephone = $_POST['telephone'];
-$comment = $_POST['comment'];
+  
+if (!empty($_POST["email"])) { $email = $_POST['email']; } else { $email=null; }
+
+if (!empty($_POST["name"])) { $name = $_POST['name']; }  else { $name=null; }
+
+if (!empty($_POST["telephone"])) { $telephone = $_POST['telephone']; }  else { $telephone=null; }
+
+if (!empty($_POST["comment"])) { $comment = $_POST['comment']; } else { $comment=null; }
+
  ?>
 
 
