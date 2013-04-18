@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * Contacts Form Captcha index controller
  *
@@ -74,7 +74,9 @@ class OlegKoval_ContactsFormCaptcha_IndexController extends Mage_Contacts_IndexC
     public function postAction() {
         if (Mage::getStoreConfigFlag(self::XML_PATH_CFC_ENABLED)) {
             try {
-                $post = $this->getRequest()->getPost();
+                $locale = Mage::app()->getLocale()->getLocale();
+				$post = $this->getRequest()->getPost();
+				
                 if ($post) {
                     //include reCaptcha library
                     require_once(Mage::getBaseDir('lib') . DS .'reCaptcha'. DS .'recaptchalib.php');
@@ -85,8 +87,9 @@ class OlegKoval_ContactsFormCaptcha_IndexController extends Mage_Contacts_IndexC
                     $captcha = recaptcha_check_answer($privatekey, $remote_addr, $post["recaptcha_challenge_field"], $post["recaptcha_response_field"]);
 
                     if (!$captcha->is_valid) {
-                        throw new Exception($this->__("The reCAPTCHA wasn't entered correctly. Go back and try it again."), 1);
-                    }
+						if ($locale == "el_GR") { throw new Exception($this->__("To κλειδί reCAPTCHA δεν είναι σωστό. Παρακαλώ δοκιμάστε ξανά."), 1);}
+                        if ($locale == "en_US") {throw new Exception($this->__("The reCAPTCHA wasn't entered correctly. Go back and try it again."), 1);}
+   					}
                 }
                 else {
                     throw new Exception('', 1);
@@ -94,9 +97,13 @@ class OlegKoval_ContactsFormCaptcha_IndexController extends Mage_Contacts_IndexC
             }
             catch (Exception $e) {
                 if (strlen($e->getMessage()) > 0) {
-                    Mage::getSingleton('customer/session')->addError($this->__($e->getMessage()));
-                }
-                $this->_redirect('*/*/');
+                   Mage::getSingleton('customer/session')->addError($this->__($e->getMessage()));                    
+  				}
+                //$this->_redirect('*/*/');
+				// call func instead
+				if ($locale == "en_US") {echo "<b>The reCAPTCHA wasn't entered correctly.</b>"; }
+				if ($locale == "el_GR") {echo "<b>To κλειδί reCAPTCHA δεν είναι σωστό.</b>"; }
+				OlegKoval_ContactsFormCaptcha_IndexController::redir($post, $locale);
                 return;
             }
         }
@@ -104,4 +111,31 @@ class OlegKoval_ContactsFormCaptcha_IndexController extends Mage_Contacts_IndexC
         //everything is OK - call parent action
         parent::postAction();
     }
+
+		public function redir($post, $locale){
+
+		if ($locale == "en_US") {echo "<br>Error, redirecting..."; }
+		if ($locale == "el_GR") {echo "<br>Σφάλμα, ανακατεύθυνση..."; }
+		
+		$name = $post["name"];
+		$email = $post["email"];
+		$telephone = $post["telephone"];
+		$comment = $post["comment"];
+				
+	?>
+	<form action="../.." name="contactForm" id="contactForm" method="post">
+		<br><input name="email" id="email" title="<?php echo Mage::helper('contacts')->__('Email') ?>" value="<?php echo $email; ?>" class="input-text required-entry validate-email" type="hidden" />
+		<br><input name="name" id="name" title="<?php echo Mage::helper('contacts')->__('Name') ?>" class="input-text required-entry" type="hidden"  value="<?php echo $name ; ?>"  />
+		<br><input name="telephone" id="telephone" title="<?php echo Mage::helper('contacts')->__('Telephone') ?>" class="input-text" type="hidden" value="<?php echo $telephone ; ?>" />
+		<br><input name="comment" id="comment" type="hidden" value="<?php echo $comment ; ?>" />
+			
+	</form>
+	
+	<SCRIPT LANGUAGE="JavaScript"><!--
+setTimeout('document.contactForm.submit()',1800);
+//--></SCRIPT>
+	
+	<?php
+	}
+	
 }
